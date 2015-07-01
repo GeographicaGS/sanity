@@ -1,0 +1,85 @@
+#data_panel{
+	
+	svg{
+		// padding-left: 25px;
+	}
+	.axis path, .axis line {
+	  fill: none;
+	  stroke: #3a3a40;
+	  shape-rendering: crispEdges; 
+	}
+
+	.tick{
+		font-family: @font-body;
+		text-transform: uppercase;
+		
+		line{
+			stroke-width:2;
+			stroke:#555555;
+		}
+
+		text{
+			fill:#808080;
+			font-size: 12px;
+		}
+	}
+
+	.axis{
+		.domain{
+			opacity: 0;
+		}
+	}
+
+	.area {
+	  fill: #e60000;
+	  opacity: 0.1;
+	}
+
+	.line{
+		stroke:#e60000;
+		stroke-width:2;
+		fill:transparent;
+	}
+
+	.interactiveZone{
+		fill:#fff;
+	}
+
+	.guide{
+		stroke:#cccccc;
+		stroke-width:2;
+		opacity: 0.5;
+	}
+
+
+	circle{
+		fill:transparent;
+		&.active{
+			fill:#e60000;
+		}
+	}
+
+	.text{
+		fill:#808086;
+		font-size: 14px;
+		.first{
+			font-weight: bold;
+			fill:#cccccc;
+		}
+	}
+
+	text{
+		font-size:8px;
+	}
+
+	.textRect{
+		fill:#323232;
+	}
+
+	.grid{
+		line{
+			stroke-width: 1;
+			stroke: #eeeeee;
+		}
+	}
+}

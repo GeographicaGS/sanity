@@ -1,0 +1,59 @@
+<div id="dashboard">
+    <header>
+         <h1>  
+            <a class="logo" href="#" jslink>      
+                <img alt="CEPSA Pay" src="/img/CP_logo_cepsapay-pos.svg">  
+            </a>
+        </h1>
+    </header>
+    <main>
+        <div class="resume_panel">
+            <div class="page-header">
+                <h2 class="page-title">Resumen <br> <span>Datos básicos de la app <em>Cepsa Pay</em></span></h2>
+            </div>
+            <div class="res-row">
+                <h3><a class="active" href="#"  data-type='{{cons.TYPE_DISEASES}}'><lang>Casos de varicela 2013-2014</lang></a></h3>
+                <div class="txt-big">{{total}}</div>
+            </div>
+            <div class="res-row">
+                <h3>Casos detectados en el año 2013</h3>
+                <div class="txt-md">{{total_2013}}</div>
+            </div>
+            <div class="res-row">
+                <h3>asos detectados en el año 2014</h3>
+                <div class="txt-md">{{total_2014}}</div>
+            </div>
+           
+            <a href="#"  data-type='{{cons.TYPE_DISEASES}}'>
+                <span class="close">Cerrar resumen</span>
+            </a>
+
+
+            
+        </div><!-- resume_panel -->
+
+        <h2 class="titleMap">
+            <lang>Mapa de casos de varicela año 2013-2014</lang> 
+        </h2>
+
+        <!-- CartoDB Timebar: inline css to be replaced by javascript  -->
+
+        <!-- <div class="cartodb-timeslider" style="width: 212px; bottom: auto; left: 450px; top: 16px;">
+            <ul>
+                <li class="controls"><a class="button stop" href="#/pause">pause</a></li>
+                <li class="time">
+                    <p class="value">05/27/2015</p>
+                </li>
+                <li class="last">
+                    <div class="slider-wrapper">
+                        <div class="slider ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all">
+                            <div class="ui-slider-range ui-widget-header ui-slider-range-min" style="width: 50%;"></div>
+                            <a href="#" class="ui-slider-handle ui-state-default ui-corner-all" style="left: 50%;"></a>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div> -->
+        <!-- cartodb-timeslider -->
+    </main>
+</div>

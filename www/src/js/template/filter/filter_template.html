@@ -1,0 +1,89 @@
+<div class="filters-reveal-wrapper">    
+    <div class="filters-row main  date-range">
+        <div class="filters-cell-big">
+            <span id="startDateLabel" class="label"><lang>Desde</lang></span>
+            <span class="txt-big"><input id="startDate" type="text" value="{{dateMin}}"></span>
+        </div><!-- filters-cell-big -->
+        <div class="filters-cell-big">
+            <span id="endDateLabel" class="label">hasta</span>
+            <span class="txt-big"><input id="endDate"  type="text" value="{{dateMax}}"></span>
+        </div><!-- filters-cell-big -->   
+    </div><!-- filters-row main --> 
+
+    <!-- <div class="filters-row agregar disabled">
+        <span class="label aside opt-state">Opt state </span>
+        <span class="notification">Los datos aparecen desagregados</span>
+    </div> -->
+
+<!--     <div class="filters-row agregar enabled" style='display:none' >
+        <span class="label aside opt-state active">Active</span>
+        <div class="dropdown-container"><span class="label">por Localización</span><span class="caret"></span>
+            <ul class="dropdown" type="aggregation">
+                <li class="hidden" type="noagg">por Localización</li>
+                <li type="prov">por Provincia</li>
+                <li type="reg">por Comunidad</li>
+            </ul>
+        </div>
+    </div> -->
+
+    <div class="filters-row agregar" >
+        <span class="label aside "><lang>Ver</lang></span>
+        <select id='aggregation'>
+            <option value='noagg'>{{noaggTitle}}</option>
+            <option value='prov'><lang>por Provincia</lang></option>
+            <option value='region'><lang>por Comunidad</lang></option>
+        </select>
+    </div>
+
+<!--     <div class="filters-row-opt" type="petrolpump" >
+        <span class="label aside active"><lang>Tipo de compra</lang></span>
+        <select id='' filter-name='petrolpump_family'>
+            <option value='all'><lang>Todas</lang></option>
+            <option value='fuel'><lang>Gasolina</lang></option>
+            <option value='shop'><lang>Tienda</lang></option>
+        </select>
+    </div>
+
+    <div class="filters-row-opt" type="petrolpump">
+        <span class="label aside active"><lang>Forma de pago</lang></span>
+        <select id='' filter-name='petrolpump_paymenttype'>
+            <option value='all'><lang>Todas</lang></option>
+            <option value='pump'><lang>En surtidor</lang></option>
+            <option value='cash'><lang>En caja</lang></option>
+        </select>
+    </div> -->
+
+    <!-- <div class="filters-row ">
+        <span class="label aside">Aside Label</span>
+        <div class="dropdown-container">Another dropbox <span class="caret"></span>
+            <ul class="dropdown">
+                <li>item1</li>
+                <li>item2</li>
+                <li>item3</li>
+                <li>item4</li>
+                <li>item5</li>
+            </ul>
+        </div>
+    </div>
+     -->
+     <!-- <div class="filters-row type" >
+        <span class="label aside active">Tipología</span>
+        <div class="dropdown-container"><span class="label">Another dropbox</span> <span class="caret"></span>
+            <ul class="dropdown">
+                <li class="hidden">Another dropbox</li>
+                <li>item1</li>
+                <li>item2</li>
+                <li>item3</li>
+                <li>item4</li>
+                <li>item5</li>
+            </ul>
+        </div>
+    </div> -->
+
+    <div class="filters-row clearFilter">
+        <span class="filters-reset">Limpiar filtros</span>
+    </div>
+     <!-- <div class="filters-row">
+        <span class="notification">eg. No hay filtros aplicado</span>
+    </div> -->
+</div><!-- filters-reveal-wrapper -->

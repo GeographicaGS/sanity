@@ -1,0 +1,52 @@
+#charts_panel{
+	.axis path, .axis line {
+	  fill: none;
+	  stroke: #3a3a40;
+	  shape-rendering: crispEdges; 
+	}
+
+	.tick{
+		text-transform: uppercase;
+		text{
+			fill:#808086;
+			font-size: 11px;
+		}
+	}
+
+	.area {
+	  fill: #e60000;
+	  opacity: 0.25;
+	}
+
+	.line{
+		stroke:#e60000;
+		fill:transparent;
+	}
+
+	.interactiveZone{
+		fill:#272727;
+	}
+
+	.guide{
+		stroke:#808080;
+		opacity: 0.5;
+	}
+
+
+	circle{
+		fill:transparent;
+		&.active{
+			fill:#dddddd;
+		}
+	}
+
+	.text{
+		fill:#dddddd;
+		font-size: 11px;
+		font-family: @font-body;
+	}
+
+	text{
+		font-size:8px;
+	}
+}
