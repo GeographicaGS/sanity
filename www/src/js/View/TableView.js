@@ -42,6 +42,9 @@ App.View.Table = Backbone.View.extend({
         }
 
         else if (ctxData.type == App.Cons.TYPE_COMP){
+            if(ctxData.aggregation == App.Cons.NOAGG){
+                view['error'] = App.tr('No es posible crear una tabla de datos para una visualización por localización.');
+            }
             if(ctxData.aggregation == App.Cons.AGG_PROV){
                 view['comp'] = {'col1':App.tr('Provincia'),'col2':App.tr('Casos año 2013'),'col3':App.tr('Casos año 2014')}
             }
@@ -51,6 +54,14 @@ App.View.Table = Backbone.View.extend({
         }
 
         this.setElement($(Mustache.render(this._template, view)).replaceAll(this.el));
+
+        if (view.hasOwnProperty('error')){
+            this.$('table').remove();
+
+        }
+        else{
+            this.$('.error').remove();
+        }
     },
 
     _renderTable:function(){
@@ -68,7 +79,7 @@ App.View.Table = Backbone.View.extend({
             }
         }
         else if (type == App.Cons.TYPE_COMP){
-            
+
             var data = this._collection.toJSON();
             this._parseNumbersCollection(data,'total_2013',0);
             this._parseNumbersCollection(data,'total_2014',0);

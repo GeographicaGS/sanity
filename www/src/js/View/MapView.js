@@ -84,7 +84,7 @@ App.View.Map = Backbone.View.extend({
         }
 
         $('#map').removeClass('single').addClass('comparison')
-            .html('<div id=\'map1\'></div><div id=\'map2\'></div>')
+            .html('<div id=\'map1\'></div><div id=\'map2\'></div><h2 id=\'titlemap1\'>Varicela año 2013</h2><h2 id=\'titlemap2\'>Varicela año 2014</h2>')
             .append(this._tooltip.$el);
 
         // Create map objects
