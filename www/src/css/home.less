@@ -629,6 +629,12 @@ tooltip
 	Twitter Timebar
 ================================================================================= */
 #map {
+	&.comparison {
+		width:~"calc(100% - 96px)";
+		left:0;
+		right:0;
+		margin-left: 96px;
+	}
 div.cartodb-timeslider {
 	// border: 0 none !important;
 	top: 16px;
@@ -642,6 +648,8 @@ div.cartodb-timeslider {
 	border-radius: 8px;
 	.thick-border;
 	.common-box-shadow;
+
+
 	
 	ul {
 		position: relative;
@@ -1551,7 +1559,7 @@ main{
 		background-clip: padding-box;
 		border-top:4px solid fade(#939597, 50%);
 		transition: height .3s cubic-bezier(0.390, 0.575, 0.565, 1.000);
-		z-index: 2;
+		z-index: 3;
 
 		.data_panel_container{
 			height: 100%;
@@ -1940,6 +1948,7 @@ main{
 	color:@cp-white;
 	font-weight: 700;
 	margin-top: 26px;
+	cursor:pointer;
 	
 	&:hover {
 		background-color: lighten(@cp-red, 5%);
@@ -1948,13 +1957,32 @@ main{
 }//gotocompare-bt
 
 .social-alarm-state {
+	margin-top: 20px;
+	height:24px;
+	.clearfix;
 	li {
 		float:left;
 		color:fade(@cp-grey-ld, 25%);
+
+		&:after {
+			content:"|";
+			margin:0 5px;
+			font-size: 14px !important;
+			color:  fade(@cp-grey-ld, 25%);
 		}
+		&:last-child {
+			&:after  {
+				display: none;
+			}
+		}
+		
+
+		
 		&.current {
 			font-size: 30px;
 			font-weight: 300;
+			position: relative;
+			top:-15px;
 		}
 		
 		&:nth-child(2) {
@@ -1963,6 +1991,7 @@ main{
 
 			}
 		}
+	}//li
 
 
 	}//.social-alarm-state 
