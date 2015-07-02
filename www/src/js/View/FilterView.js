@@ -135,6 +135,13 @@ App.View.Filter = Backbone.View.extend({
             maxDate : new Date()
         });
 
+
+        if (ctxData.type == App.Cons.TYPE_COMP){
+            this.$('.date-range').hide();
+        }
+        else{
+            this.$('.date-range').show();   
+        }
         return this;
     }
 });
