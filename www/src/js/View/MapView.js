@@ -84,7 +84,7 @@ App.View.Map = Backbone.View.extend({
         }
 
         $('#map').removeClass('single').addClass('comparison')
-            .html('<div id=\'map1\'></div><div id=\'map2\'></div><h2 id=\'titlemap1\'>Varicela año 2013</h2><h2 id=\'titlemap2\'>Varicela año 2014</h2>')
+            .html('<div id=\'map1\'></div><div id=\'map2\'></div>')
             .append(this._tooltip.$el);
 
         // Create map objects
@@ -98,6 +98,9 @@ App.View.Map = Backbone.View.extend({
         // Add basemap
         this._getMapTileLayer().addTo(this._mapInstances[0]);
         this._getMapTileLayer().addTo(this._mapInstances[1]);
+
+        $('#map #map1').append('<h2 id=\'titlemap1\'>Varicela año 2014</h2>');
+        $('#map #map2').append('<h2 id=\'titlemap2\'>Varicela año 2014</h2>');
 
         // complete process
         this._currentMapType = 'comparison';
