@@ -2,55 +2,30 @@
     <div class="inner">                                    
         <table class="">                                                 
             <thead class="table-header">
-              <!-- <tr> -->
-                <!-- <th><span class="sort">Comunidad</span></th>
-                <th>Altas</th>
-                <th class="service-sta">Estaciones de Servicio</th>
-                <th>Hombres / Mujeres</th>
-                <th>Edad media</th>
-                <th>Mejor provincia</th> -->
-              <!-- </tr> -->
-              {{#registrations_noagg}}
+ 
+              {{#diseases_noagg}}
                 <th>{{col1}}</th>
                 <th>{{col2}}</th>
                 <th>{{col3}}</th>
                 <th>{{col4}}</th>
-              {{/registrations_noagg}}
+              {{/diseases_noagg}}
 
-              {{#registrations_prov}}
+              {{#diseases_prov}}
                 <th>{{col1}}</th>
                 <th class="textright">{{col2}}</th>
-              {{/registrations_prov}}
+              {{/diseases_prov}}
 
-              {{#registrations_region}}
+              {{#diseases_region}}
                 <th>{{col1}}</th>
                 <th class="textright">{{col2}}</th>
-              {{/registrations_region}}
+              {{/diseases_region}}
 
-              {{#transaction_noagg}}
+              {{#comp}}
                 <th>{{col1}}</th>
-                <th>{{col2}}</th>
-                <th>{{col3}}</th>
-                <th class="textright">{{col4}}</th>
-                <th>{{col5}}</th>
-                <th>{{col6}}</th>
-              {{/transaction_noagg}}
+                <th class="textright">{{col2}}</th>
+                <th class="textright">{{col3}}</th>
 
-              {{#transaction_prov}}
-              <tr>
-                  <th>{{col1}}</th>
-                  <th class="textright">{{col2}}</th>
-              </tr>
-              {{/transaction_prov}}
-
-              {{#transaction_region}}
-              <tr>
-                  <th>{{col1}}</th>
-                  <th class="textright">{{col2}}</th>
-              </tr>
-              {{/transaction_region}}
-
-              
+              {{/comp}}
 
             </thead>
 

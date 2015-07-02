@@ -32,12 +32,21 @@ App.View.Table = Backbone.View.extend({
         this._collection.fetch({ reset: true });
         if (ctxData.type == App.Cons.TYPE_DISEASES){
             if(ctxData.aggregation == App.Cons.NOAGG){
-                view['registrations_noagg'] = {'col1':App.tr('Provincia'),'col2':App.tr('Nombre'),'col4':App.tr('Fecha')};
+                view['diseases_noagg'] = {'col1':App.tr('Provincia'),'col2':App.tr('Nombre'),'col4':App.tr('Fecha')};
             }else if(ctxData.aggregation == App.Cons.AGG_PROV){
-                view['registrations_prov'] = {'col1':App.tr('Provincia'),'col2':App.tr('Casos')}
+                view['diseases_prov'] = {'col1':App.tr('Provincia'),'col2':App.tr('Casos')}
             }
             else if(ctxData.aggregation == App.Cons.AGG_REGION){
-                view['registrations_region'] = {'col1':App.tr('Comunidad autónoma'),'col2':App.tr('Casos')}
+                view['diseases_region'] = {'col1':App.tr('Comunidad autónoma'),'col2':App.tr('Casos')}
+            }
+        }
+
+        else if (ctxData.type == App.Cons.TYPE_COMP){
+            if(ctxData.aggregation == App.Cons.AGG_PROV){
+                view['comp'] = {'col1':App.tr('Provincia'),'col2':App.tr('Casos año 2013'),'col3':App.tr('Casos año 2014')}
+            }
+            else if(ctxData.aggregation == App.Cons.AGG_REGION){
+                view['comp'] = {'col1':App.tr('Comunidad autónoma'),'col2':App.tr('Casos año 2013'),'col3':App.tr('Casos año 2014')}
             }
         }
 
@@ -50,13 +59,21 @@ App.View.Table = Backbone.View.extend({
         var data = {};
         if (type == App.Cons.TYPE_DISEASES){
             if(aggregation == App.Cons.NOAGG){
-                data['registrations_noagg'] = this._collection.toJSON();
+                data['diseases_noagg'] = this._collection.toJSON();
             }else if(aggregation == App.Cons.AGG_PROV){
-                data['registrations_prov'] = this._parseNumbersCollection(this._collection.toJSON(),'total',0);
+                data['diseases_prov'] = this._parseNumbersCollection(this._collection.toJSON(),'total',0);
             }
             else if(aggregation == App.Cons.AGG_REGION){
-                data['registrations_region'] = this._parseNumbersCollection(this._collection.toJSON(),'total',0);
+                data['diseases_region'] = this._parseNumbersCollection(this._collection.toJSON(),'total',0);
             }
+        }
+        else if (type == App.Cons.TYPE_COMP){
+            
+            var data = this._collection.toJSON();
+            this._parseNumbersCollection(data,'total_2013',0);
+            this._parseNumbersCollection(data,'total_2014',0);
+            data['comp_data'] = data;
+
         }
         
         this.$('tbody').html(Mustache.render(this._templatePage, data));
