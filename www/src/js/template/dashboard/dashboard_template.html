@@ -2,7 +2,7 @@
     <header>
          <h1>  
             <a class="logo" href="#" jslink>      
-                <img alt="CEPSA Pay" src="/img/CP_logo_cepsapay-pos.svg">  
+                <img alt="CEPSA Pay" src="/img/sanity/SA_logo_sanity-pos.svg">  
             </a>
         </h1>
     </header>
@@ -14,6 +14,8 @@
             <div class="res-row">
                 <h3><a class="active" href="#"  data-type='{{cons.TYPE_DISEASES}}'><lang>Casos de varicela 2013-2014</lang></a></h3>
                 <div class="txt-big">{{total}}</div>
+
+                <div class="gotocompare-btn">Comparar datos</div>
             </div>
             <div class="res-row">
                 <h3>Casos detectados en el año 2013</h3>
@@ -22,6 +24,17 @@
             <div class="res-row">
                 <h3>asos detectados en el año 2014</h3>
                 <div class="txt-md">{{total_2014}}</div>
+            </div>
+             <div class="res-row">
+                <h3>Alarma social</h3>
+                 
+                 <ul class="socialalerm-state">
+                    <li>minima</li>
+                    <li class="current">baja</li>
+                    <li>media</li>
+                    <li>intensa</li>
+                </ul>
+                
             </div>
            
             <a href="#"  data-type='{{cons.TYPE_DISEASES}}'>

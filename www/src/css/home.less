@@ -449,6 +449,7 @@ tooltip
 				bottom: 16px;
 				font-size: 3rem;
 				color: #e60000;
+				color:@cp-red;
 				font-weight: 300;
 				left: 30px;
 			}
@@ -836,7 +837,62 @@ header {
 					}//before
 				}//active
 			}//altas
+
+			/* Sanity edit 
+			--------------------------------*/
 			
+			&.data {
+				&:before {
+					content: url(../img/sanity/SA_icon_datos-0.svg);
+				}
+				&.current {
+					&:before{ 
+					content: url(../img/sanity/SA_icon_datos-1.svg);
+					}
+				}
+			}
+
+			&.alerts {
+				&:before {
+					content: url(../img/sanity/SA_icon_alertas-0.svg);
+				}
+				&.current {
+					&:before{ 
+					content: url(../img/sanity/SA_icon_alertas-1.svg);
+					}
+				}//current
+			}//alerts
+
+			&.socialalarm {
+				letter-spacing: -0.6px;
+				&:before {
+					content: url(../img/sanity/SA_icon_social-0.svg);
+				}
+				&.current {
+					&:before{ 
+					content: url(../img/sanity/SA_icon_social-1.svg);
+					}
+				}//current
+			}//alerts
+
+			&.indicators {
+				&:before{
+					content: url(../img/sanity/SA_icon_indicadores-0.svg);
+					
+				}//before
+
+				&.current{
+					&:before {
+						content: url(../img/sanity/SA_icon_indicadores-1.svg);
+					}//before
+				}//active
+			}//indicadores
+
+
+
+			/*------------------------------------
+			ENDs Sanity */
+
 			&.recharges {
 				&:before{
 					content: url(../img/CP_icon_recargas-0.svg);
@@ -850,6 +906,8 @@ header {
 				}//active
 			}//recargas
 
+
+
 			&.petrolpump {
 				&:before{
 					content: url(../img/CP_icon_pagos-0.svg);
@@ -862,18 +920,7 @@ header {
 					}//before
 				}//active
 			}//pago
-			&.indicators {
-				&:before{
-					content: url(../img/CP_icon_indicadores-0.svg);
-					
-				}//before
-
-				&.current{
-					&:before {
-						content: url(../img/CP_icon_indicadores-1.svg);
-					}//before
-				}//active
-			}//indicadores
+			
 			
 			&.tweets {
 				&:before{
@@ -1875,6 +1922,90 @@ main{
 	}//info-details
 
 }//main
+
+/* =================================================================================
+	Sanity 
+================================================================================= */	
+/* Pagina Inicio */
+
+.gotocompare-btn {
+	background: @cp-red;
+	display: inline-block;
+	height: 32px;
+	line-height: 32px;
+	background: @cp-red url(../img/sanity/SA_icon_comparar.svg) no-repeat top left;
+	padding-left: 42px;
+	border-radius:2px;
+	margin-top: 26px;
+	&:hover {
+		background-color: lighten(@cp-red, 5%);
+	}
+	
+}//gotocompare-bt
+
+.compare-mode {
+	position: fixed;
+	left:50%;
+	top:16px;
+	max-width: 40px;
+	z-index: 2;
+	margin-left: 96px / 2;
+}
+
+.split-icon {
+
+	display: block;	
+	position: relative;
+	margin-left: -20px ;
+	
+	width: 40px;
+	height: 40px;
+	background: url(../img/sanity/SA_icon_comparar.svg) no-repeat center center ;
+	border-radius:6px;
+	border-size: 4px;
+	.thick-border;
+	.common-box-shadow;
+	background-color:@cp-grey-d;
+	cursor:pointer;
+	&:hover {
+		background:ligthen(@cp-grey-d, 5%);
+	}
+
+	&.enabled {
+		background-color:@cp-blue-l;
+		&:after {
+			display: block;
+		}
+	}
+	&:before, &:after {
+		position: absolute;
+		z-index: -1;
+		display: block;
+		left:50%;
+		margin-left: -2px;
+		content:"";
+		width: 4px;
+		background: @cp-grey-ui-l;	
+	}
+	&:before {	
+		height:100%;
+		top:-20px;
+		height: 20px;
+		
+
+	}
+	&:after {
+		top:100%;	
+		// height:100%;
+		height:2000px;
+		display: none;
+		// height:100%;
+		
+	}
+
+}
+
+
 
 /* =================================================================================
 	Other UI components
