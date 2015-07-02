@@ -1,3 +1,5 @@
+'use strict';
+
 App.Collection.Chart = Backbone.Collection.extend({ 
     _username: null,
     _ctx: null,
@@ -35,7 +37,7 @@ App.Collection.Chart = Backbone.Collection.extend({
 
                 query = 'SELECT * from diseasesPoxBySteps(\'2013-01-01 00:00:00\',\'2013-12-31 23:59:59\',' + App.Cons.STEPS + ')';
 
-                result = [];
+                var result = [];
             
                 var sql = new cartodb.SQL({ user: this._username });
                 sql.execute(query)
