@@ -195,7 +195,6 @@ App.View.Map = Backbone.View.extend({
                 'threshold' : inc*i + min,
                 'size' : startSize+i*sizeInc
             });
-
         }
 
         return points;
@@ -245,6 +244,7 @@ App.View.Map = Backbone.View.extend({
                 layer.setInteraction(true);
 
                 var sublayer = layer.getSubLayer(0);
+                sublayer.setInteraction(true);
                 
                 sublayer.on('featureOver', function(e, latlng, pos, data) {
                     _this._tooltipModel.set({
