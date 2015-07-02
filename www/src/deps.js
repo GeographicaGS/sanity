@@ -11,6 +11,7 @@ deps.JS = [
     'js/lib/jquery.countTo.js',
     'js/lib/moment-with-locales-2.10.3.js',
     'js/lib/sprintf.js',
+    'js/lib/L.Map.Sync.js',
 
 
     // Namespace
