@@ -16,7 +16,8 @@ App.View.Sidebar = Backbone.View.extend({
     },
 
     changeSection:function(e){
-        var current = $(e.currentTarget).attr('class').replace('current', '').trim();
+
+        var current = $(e.target).attr('data-section');
         if(App.Cons.TYPES.indexOf(current)==-1){
             alert("Funcionalidad en desarrollo");
         }
