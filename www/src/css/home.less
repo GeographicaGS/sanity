@@ -635,6 +635,27 @@ tooltip
 		right:0;
 		margin-left: 96px;
 	}
+	#map1, #map2 {
+		position: relative;
+	}
+	h2 {
+		position: absolute;
+		bottom:52px;
+		font-size: 30px;
+		line-height: 32px;
+		font-weight: 300;
+		
+		&#titlemap1 {
+			right:40px;
+			color: @cp-red;
+
+		}
+		&#titlemap2{
+			
+			left:40px;
+			color:@cp-yellow-d;
+		}
+	}
 div.cartodb-timeslider {
 	// border: 0 none !important;
 	top: 16px;
@@ -1993,8 +2014,9 @@ main{
 		}
 	}//li
 
+	
 
-	}//.social-alarm-state 
+}//.social-alarm-state 
 
 .compare-mode {
 	position: fixed;
@@ -2003,6 +2025,7 @@ main{
 	max-width: 40px;
 	z-index: 2;
 	margin-left: 96px / 2;
+
 }
 
 .split-icon {
@@ -2020,16 +2043,15 @@ main{
 	.common-box-shadow;
 	background-color:@cp-grey-d;
 	cursor:pointer;
+	
 	&:hover {
-		background:ligthen(@cp-grey-d, 5%);
+		background-color: ligthen(@cp-grey-d, 50%);
+		background-color: red;
+		background-color: lighten(@cp-grey-d, 5%)
 	}
 
-	&.enabled {
-		background-color:@cp-blue-l;
-		&:after {
-			display: block;
-		}
-	}
+	
+
 	&:before, &:after {
 		position: absolute;
 		z-index: -1;
@@ -2055,6 +2077,55 @@ main{
 		// height:100%;
 		
 	}
+
+	.hint-text{
+		color: @cp-white;
+	    left: 100%;
+	    line-height: 32px;
+	    margin-left: 0px;
+	    position: absolute;
+	    right: -60px;
+	    top: 0;
+	    width:0;
+	    opacity:0;
+	    ovwerflow:hidden;
+	    user-select: none;
+	    .txt-stroke(#000);
+	    
+	}
+
+	&:hover {
+		.hint-text {
+			// width: 120px;
+			opacity:1;
+			width: 120px;
+			margin-left: 10px;
+			overflow:visible;
+			transition: opacity margin .2s;
+			-webkit-user-select: none; /* Chrome/Safari */        
+			-moz-user-select: none; /* Firefox */
+			-ms-user-select: none; /* IE10+ */
+			&.close {
+				display:none;
+			}
+		}//.hint-text
+	}//.hover
+
+	&.enabled {
+		background-color:@cp-blue-l;
+		&:after {
+			display: block;
+		}
+		&:hover {
+			.hint-text {
+				display: none;
+				&.close{ 
+				display: inline-block;	
+				}
+			}//.hint-text
+		}//&:hover
+	}//&.enabled
+
 
 }
 
@@ -2111,6 +2182,7 @@ main{
 	}
 
 
+
 	#ui-zoom-controls {
 		position: fixed;
 		right:16px;
@@ -2138,6 +2210,17 @@ main{
 
 		}//btn
 	}//#ui-zoom-controls
+
+.error {
+	display: block;
+	width:40%;
+	margin: 26px auto;
+	padding: 16px; 
+	border: 1px solid fade(@cp-red, 25%);
+	background: fade(@cp-red, 10%);
+	border-radius: 4px;
+	color: fade(@cp-red,75%);
+}
 
 /* =================================================================================
 	Footer
@@ -2196,6 +2279,7 @@ footer {
 	}
 
 }//footer
+
 
 
 .picker{   visibility: hidden; }

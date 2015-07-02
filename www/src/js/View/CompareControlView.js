@@ -22,7 +22,7 @@ App.View.CompareControl = Backbone.View.extend({
       }
 
       if (ctxData.type == App.Cons.TYPE_DISEASES || ctxData.type== App.Cons.TYPE_COMP){
-        this.$el.html('<a href="#" class="split-icon"></a>');
+        this.$el.html('<a href="#" class="split-icon"><span class="hint-text">Comparar datos</span><span class="hint-text close">Cerrar</span></a>');
 
         if (ctxData.type==App.Cons.TYPE_COMP){
           this.$('a').addClass('enabled');
