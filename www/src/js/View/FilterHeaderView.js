@@ -25,8 +25,7 @@ App.View.FilterHeader = Backbone.View.extend({
     },
     
     render: function(ctxData) {
-    	var sectionTitles = {},
-            subtitle = ctxData.type == App.Cons.TYPE_COMP ? 
+    	var subtitle = ctxData.type == App.Cons.TYPE_COMP ? 
                     '<em>' + App.tr('Comparativa 2013-2014') + '</em>': 
                     '<em>' + ctxData.dateFilter.min.format('L')+ '</em> – <em>' 
                         + ctxData.dateFilter.max.format('L')+ '</em>';

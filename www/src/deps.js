@@ -38,6 +38,7 @@ deps.JS = [
     'js/View/TooltipMapView.js',
     'js/View/DashboardView.js',
     'js/View/MainBoardView.js',
+    'js/View/CompareControlView.js',
     
 
     // --------------------

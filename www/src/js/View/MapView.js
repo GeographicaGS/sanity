@@ -13,24 +13,6 @@ App.View.Map = Backbone.View.extend({
     initialize: function(opts) {       
         this._ctx = opts.ctx;
 
-        // var southWest = L.latLng(27.37, -18.39),
-        //     northEast = L.latLng(43.24, 4.92),
-        //     bounds = L.latLngBounds(southWest, northEast);
-        
-        // this._map  = new L.Map('map', {
-        //     zoomControl: true,
-        //     center: [39.90,-4.72],
-        //     zoom: 7//,
-        //     //maxBounds : bounds,
-        //     //minZoom : 5
-        // });
-
-        // L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png', {
-        //     attribution: 'Geographica'
-        // }).addTo(this._map);
-
-        
-
         this._tooltipModel = new Backbone.Model();
         this._tooltip = new App.View.TooltipMap({
             model: this._tooltipModel

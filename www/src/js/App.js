@@ -96,43 +96,23 @@ App.detectCurrentLanguage = function(){
 App.ini = function(){
 
     this.lang = this.detectCurrentLanguage();
-
-    
     moment.locale(this.lang);
 
-   
     var ctx = new Context(),
         map = new App.View.Map({ctx: ctx});
-        // groupChart = new App.View.GroupChart({ctx: ctx}),
-        // dataPanel = new App.View.DataPanel({ctx: ctx, miniChart:groupChart.getMiniChart()}),
-        // sidebar = new App.View.Sidebar({ctx: ctx}),
-        // timebar = new App.View.Timebar({ctx: ctx});
-        // filterHeader = new App.View.FilterHeader({ctx: ctx});
-        // filter = new App.View.Filter({ctx: ctx});
-
-    // Be careful UPDATING the context, that's generated work
-    // var options = ctx.toJSON();
-    // options.dateFilter.min = '01/01/2015';
-    // options.dateFilter.max = '31/12/2015';
-    // ctx.update(options);
 
     this.router = new App.Router({ 
         ctx: ctx,
-        map : map,
-        // groupChart : groupChart,
-        // dataPanel : dataPanel,
-        // sidebar : sidebar,
-        // timebar : timebar,
-        // filterHeader : filterHeader
-        // filter : filter
+        map : map
     });
 
     this.basePath = this.config.BASE_PATH + this.lang;
 
+    this._compareControl = new App.View.CompareControl({ctx: ctx});
+    $('body').append(this._compareControl.$el);
 
     this.$main = $('#main');
 
-    console.log('firing');
     Backbone.history.start({pushState: true,root: this.basePath });
 
     this.resizeMe();
