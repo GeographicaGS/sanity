@@ -452,56 +452,8 @@ App.View.Map = Backbone.View.extend({
                     'marker-multi-policy: largest;',
                 '}'].join('\n');
 
-            function createLayerClosure(i){
-                cartodb.createLayer(_this._mapInstances[i],{
-                    user_name : App.config.account,
-                    type: 'cartodb',
-                    sublayers : [{
-                        sql : 'SELECT * FROM ' + table + ' WHERE ' + dateQuery[i],
-                        cartocss : cartocss,
-                        interactivity : 'name,age'
-                    }]
-                })
-                .addTo(_this._mapInstances[i])
-                .on('done', function(layer) {
-                    _this._currentLayers.push(layer);
-                    layer.setInteraction(true);
-
-                    var sublayer = layer.getSubLayer(0);
-                    sublayer.setInteraction(true);
-                    
-                    sublayer.on('featureOver', function(e, latlng, pos, data) {
-
-                        if (i==1){
-                            pos.x += $('#map2').position().left;
-                        }
-                        
-                        _this._tooltipModel.set({
-                            'data' : [
-                                {
-                                    'label': 'Nombre',
-                                    'value': data.name
-                                },
-                                {
-                                    'label': 'Edad',
-                                    'value': data.age
-                                }
-                            ],
-                            'pos': pos
-                        });
-                    });
-
-                    sublayer.on('featureOut', function() {
-                        _this._tooltipModel.clear();
-                    });
-                })
-                .on('error', function(err) {
-                    alert("some error occurred: " + err);
-                });
-            }
-
             for (var i=0;i<2;i++){
-                createLayerClosure(i);
+                _this._createLayerClosureDiseases(i,aggregation,cartocss,'SELECT * FROM ' + table + ' WHERE ' + dateQuery[i]);
             }
         }
         else{
@@ -539,55 +491,7 @@ App.View.Map = Backbone.View.extend({
                 var max = data.rows[0].max,
                     min = data.rows[0].min;
 
-            
-                function createLayerClosure(i){
-                    cartodb.createLayer(_this._mapInstances[i],{
-                        user_name : App.config.account,
-                        type: 'cartodb',
-                        sublayers : [{
-                            sql : sql.replace('###filter###',dateQuery[i]),
-                            cartocss : cartocss,
-                            interactivity: 'n,name'
-                        }]
-                    })
-                    .addTo(_this._mapInstances[i])
-                    .on('done', function(layer) {
-                         _this._currentLayers.push(layer);
-                        layer.setInteraction(true);
-
-                        var sublayer = layer.getSubLayer(0);
-                        
-                        sublayer.on('featureOver', function(e, latlng, pos, data) {
-                            if (i==1){
-                                pos.x += $('#map2').position().left;
-                            }
-                            _this._tooltipModel.set({
-                                'data' : [
-                                    {
-                                        'label': aggregation==App.Cons.AGG_PROV ? 'Provincia' : 'Comunidad autónoma',
-                                        'value': data.name
-                                    },
-                                    {
-                                        'label': 'Casos',
-                                        'value': App.formatNumber(data.n,0)
-                                    }
-                                ],
-                                'pos': pos
-                            });
-                           
-                        });
-
-                        sublayer.on('featureOut', function() {
-                           _this._tooltipModel.clear();
-                        });
-                    })
-                    .on('error', function(err) {
-                        alert("some error occurred: " + err);
-                    });
-                }
-
                 for (var i=0;i<2;i++){
-
                     var cartocss = _this._getBubbleCSS({
                         table: table,
                         min : min,
@@ -596,12 +500,129 @@ App.View.Map = Backbone.View.extend({
                         color: i==0 ? null : '#cc9900'
                     });
 
-                    createLayerClosure(i);
+                    _this._createLayerClosureDiseases(i,aggregation,cartocss,sql.replace('###filter###',dateQuery[i]));
                 }
+
             })
             .fail(function(error){
                 console.error(error);
             });
         }
+    },
+
+    _createLayerClosureDiseases : function (i,agg,cartocss,sql){
+        var _this = this;
+
+        cartodb.createLayer(this._mapInstances[i],{
+            user_name : App.config.account,
+            type: 'cartodb',
+            sublayers : [{
+                //sql : 'SELECT * FROM ' + table + ' WHERE ' + dateQuery[i],
+                sql : sql,
+                cartocss : cartocss,
+                interactivity : agg==App.Cons.NOAGG ? 'name,age' : 'n,name'
+            }]
+        })
+        .addTo(this._mapInstances[i])
+        .on('done', function(layer) {
+            _this._currentLayers.push(layer);
+            layer.setInteraction(true);
+
+            var sublayer = layer.getSubLayer(0);
+            sublayer.setInteraction(true);
+            
+            sublayer.on('featureOver', function(e, latlng, pos, data) {
+
+                if (i==1){
+                    pos.x += $('#map2').position().left;
+                }
+                
+                var modeldata;
+                if (agg == App.Cons.NOAGG){
+                    modeldata = [
+                        {
+                            'label': 'Nombre',
+                            'value': data.name
+                        },
+                        {
+                            'label': 'Edad',
+                            'value': data.age
+                        }
+                    ];
+                }
+                else{
+                    modeldata =[
+                        {
+                            'label': agg==App.Cons.AGG_PROV ? 'Provincia' : 'Comunidad autónoma',
+                            'value': data.name
+                        },
+                        {
+                            'label': 'Casos',
+                            'value': App.formatNumber(data.n,0)
+                        }
+                    ];
+                }
+
+                 _this._tooltipModel.set({
+                    'data' : modeldata,
+                    'pos': pos
+                });
+               
+            });
+
+            sublayer.on('featureOut', function() {
+                _this._tooltipModel.clear();
+            });
+        })
+        .on('error', function(err) {
+            alert("some error occurred: " + err);
+        });
+    },
+
+    _createLayerClosureDiseasesAGG: function(i){
+        var _this = this;
+        cartodb.createLayer(this._mapInstances[i],{
+            user_name : App.config.account,
+            type: 'cartodb',
+            sublayers : [{
+                sql : sql.replace('###filter###',dateQuery[i]),
+                cartocss : cartocss,
+                interactivity: 'n,name'
+            }]
+        })
+        .addTo(this._mapInstances[i])
+        .on('done', function(layer) {
+             _this._currentLayers.push(layer);
+            layer.setInteraction(true);
+
+            var sublayer = layer.getSubLayer(0);
+            
+            sublayer.on('featureOver', function(e, latlng, pos, data) {
+                if (i==1){
+                    pos.x += $('#map2').position().left;
+                }
+                _this._tooltipModel.set({
+                    'data' : [
+                        {
+                            'label': aggregation==App.Cons.AGG_PROV ? 'Provincia' : 'Comunidad autónoma',
+                            'value': data.name
+                        },
+                        {
+                            'label': 'Casos',
+                            'value': App.formatNumber(data.n,0)
+                        }
+                    ],
+                    'pos': pos
+                });
+               
+            });
+
+            sublayer.on('featureOut', function() {
+               _this._tooltipModel.clear();
+            });
+        })
+        .on('error', function(err) {
+            alert("some error occurred: " + err);
+        });
     }
 });
