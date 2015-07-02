@@ -20,15 +20,23 @@ App.View.CompareControl = Backbone.View.extend({
       if (!ctxData){
         ctxData = this._ctx.toJSON();
       }
-      this.$el.html('<a href="#" class="split-icon"></a>');
 
-      if (ctxData.type==App.Cons.TYPE_COMP){
-        this.$('a').addClass('enabled');
+      if (ctxData.type == App.Cons.TYPE_DISEASES || ctxData.type== App.Cons.TYPE_COMP){
+        this.$el.html('<a href="#" class="split-icon"></a>');
+
+        if (ctxData.type==App.Cons.TYPE_COMP){
+          this.$('a').addClass('enabled');
+        }
+        else{
+          this._previousType = ctxData.type;
+          this.$('a').removeClass('enabled');
+        }  
+        this.$el.show();
       }
       else{
-        this._previousType = ctxData.type;
-        this.$('a').removeClass('enabled');
+        this.$el.hide();
       }
+      
     },
 
     toggle: function(e){
