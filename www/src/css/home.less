@@ -1935,13 +1935,37 @@ main{
 	line-height: 32px;
 	background: @cp-red url(../img/sanity/SA_icon_comparar.svg) no-repeat top left;
 	padding-left: 42px;
+	padding-right:20px;
 	border-radius:2px;
+	color:@cp-white;
+	font-weight: 700;
 	margin-top: 26px;
+	
 	&:hover {
 		background-color: lighten(@cp-red, 5%);
 	}
 	
 }//gotocompare-bt
+
+.social-alarm-state {
+	li {
+		float:left;
+		color:fade(@cp-grey-ld, 25%);
+		}
+		&.current {
+			font-size: 30px;
+			font-weight: 300;
+		}
+		&:nth-child(2) {
+			&.current {
+				color: @cp-yellow-l;
+
+			}
+		}
+
+	}
+
+	}//.social-alarm-state 
 
 .compare-mode {
 	position: fixed;
