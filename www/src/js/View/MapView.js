@@ -24,15 +24,15 @@ App.View.Map = Backbone.View.extend({
     },
 
     _getMapOptions: function(){
-        var southWest = L.latLng(27.37, -18.39),
-            northEast = L.latLng(43.24, 4.92),
+        var southWest = L.latLng(26,-21),
+            northEast = L.latLng(47,11),
             bounds = L.latLngBounds(southWest, northEast);
         
         return  {
             zoomControl: true,
             center: [39.90,-4.72],
-            zoom: 7//,
-            //maxBounds : bounds,
+            zoom: 6,
+            bounds : bounds
             //minZoom : 5
         };
     },
@@ -59,9 +59,13 @@ App.View.Map = Backbone.View.extend({
             .append(this._tooltip.$el);
 
         this._currentMapType = 'single';
-        this._map = new L.Map('map',this._getMapOptions());
+
+        var mapOpts = this._getMapOptions();
+        this._map = new L.Map('map',mapOpts);
+        this._map.fitBounds(mapOpts.bounds);
         this._mapInstances = [this._map];
         this._getMapTileLayer().addTo(this._map);
+
 
       
 
