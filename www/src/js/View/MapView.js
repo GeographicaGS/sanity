@@ -130,8 +130,10 @@ App.View.Map = Backbone.View.extend({
         }
 
         for (var i=0;i<this._currentLayers.length;i++){
+            if (this._currentLayers[i].clear)
+                this._currentLayers[i].clear();
             this._currentLayers[i].remove();
-            this._currentLayers[i].clear();
+            
         }
 
         this._currentLayers = [];
@@ -163,21 +165,23 @@ App.View.Map = Backbone.View.extend({
             throw "Missing opts";
         }
 
+        var color = opts.color ? opts.color : '#ff4646';
+
         var cartocss = ['#' + opts.table + '{',
                 'marker-fill-opacity: 0.5;',
-                'marker-line-color: #e60000;',
+                'marker-line-color: ' + color + ';',
                 'marker-line-width: 1;',
                 'marker-line-opacity: 1;',
                 'marker-placement: point;',
                 'marker-multi-policy: largest;',
                 'marker-type: ellipse;',
-                'marker-fill: #e60000;',
+                'marker-fill: '+ color + ';',
                 'marker-allow-overlap: true;',
                 'marker-clip: false;',
                 '}'].join('\n');
             
 
-        var points = this._getBubbleThresholdPoints(opts.min,opts.max);
+        var points = this._getBubbleThresholdPoints(opts.min,opts.max,opts.nbuckets);
         for (var i=0;i<points.length;i++){
             cartocss += [
                 '#' + opts.table + '[n>=' + points[i].threshold +']{',
@@ -190,9 +194,11 @@ App.View.Map = Backbone.View.extend({
 
     },
 
-    _getBubbleThresholdPoints: function(min,max){
-         var nbuckets = 10,
-            inc = Math.round((max-min) / nbuckets),
+    _getBubbleThresholdPoints: function(min,max,nbuckets){
+
+        nbuckets = nbuckets ? nbuckets : 10;
+
+        var inc = Math.round((max-min) / nbuckets),
             startSize = 20,
             sizeInc = 3,
             points = [];
@@ -331,6 +337,7 @@ App.View.Map = Backbone.View.extend({
                     layer.setInteraction(true);
 
                     var sublayer = layer.getSubLayer(0);
+                    sublayer.setInteraction(true);
                     
                     sublayer.on('featureOver', function(e, latlng, pos, data) {
                         _this._tooltipModel.set({
@@ -445,7 +452,7 @@ App.View.Map = Backbone.View.extend({
                     'marker-multi-policy: largest;',
                 '}'].join('\n');
 
-            for (var i=0;i<2;i++){
+            function createLayerClosure(i){
                 cartodb.createLayer(_this._mapInstances[i],{
                     user_name : App.config.account,
                     type: 'cartodb',
@@ -461,115 +468,140 @@ App.View.Map = Backbone.View.extend({
                     layer.setInteraction(true);
 
                     var sublayer = layer.getSubLayer(0);
+                    sublayer.setInteraction(true);
                     
-                    // sublayer.on('featureOver', function(e, latlng, pos, data) {
-                    //     _this._tooltipModel.set({
-                    //         'data' : [
-                    //             {
-                    //                 'label': 'Nombre',
-                    //                 'value': data.name
-                    //             },
-                    //             {
-                    //                 'label': 'Edad',
-                    //                 'value': data.age
-                    //             }
-                    //         ],
-                    //         'pos': pos
-                    //     });
-                    // });
+                    sublayer.on('featureOver', function(e, latlng, pos, data) {
 
-                    // sublayer.on('featureOut', function() {
-                    //     _this._tooltipModel.clear();
-                    // });
+                        if (i==1){
+                            pos.x += $('#map2').position().left;
+                        }
+                        
+                        _this._tooltipModel.set({
+                            'data' : [
+                                {
+                                    'label': 'Nombre',
+                                    'value': data.name
+                                },
+                                {
+                                    'label': 'Edad',
+                                    'value': data.age
+                                }
+                            ],
+                            'pos': pos
+                        });
+                    });
+
+                    sublayer.on('featureOut', function() {
+                        _this._tooltipModel.clear();
+                    });
                 })
                 .on('error', function(err) {
                     alert("some error occurred: " + err);
                 });
             }
 
+            for (var i=0;i<2;i++){
+                createLayerClosure(i);
+            }
         }
         else{
 
-            for (var i=0;i<2;i++){
+            var dateQueryALL = 'date_disease>=\'2013-01-01 00:00:00\'' +
+                        ' AND date_disease<=\'2014-12-31 23:59:59\'';
 
-                var sql;
-                
-                if (aggregation==App.Cons.AGG_PROV){
-                    sql = ' SELECT p.cartodb_id,count(ur.cartodb_id) as n,p.name,p.the_geom,p.the_geom_webmercator' +
-                            '    FROM ' + table + ' ur' +
-                            '    INNER JOIN alasarr.spain_provinces_centroids p ON p.cod_prov=ur.prov' +
-                            '   WHERE ' + dateQuery[i] +
-                            ' GROUP BY ur.prov,p.cartodb_id';
-                }
-                else if (aggregation==App.Cons.AGG_REGION){
-                    sql = ' SELECT r.cartodb_id,r.name,count(ur.cartodb_id) as n,r.the_geom,r.the_geom_webmercator' +
-                            '    FROM ' + table + ' ur' +
-                            '    INNER JOIN alasarr.spain_regions_centroids r ON r.cod_region=ur.region' +
-                            '   WHERE ' + dateQuery[i] +
-                            ' GROUP BY ur.region,r.cartodb_id' ;
-                }
-                else{
-                    throw 'Invalid aggregation "' +  aggregation +'"';
-                }
+            var sql,nbuckets;
+            
+            if (aggregation==App.Cons.AGG_PROV){
+                sql = ' SELECT p.cartodb_id,count(ur.cartodb_id) as n,p.name,p.the_geom,p.the_geom_webmercator' +
+                        '    FROM ' + table + ' ur' +
+                        '    INNER JOIN alasarr.spain_provinces_centroids p ON p.cod_prov=ur.prov' +
+                        '   WHERE ###filter###' +
+                        ' GROUP BY ur.prov,p.cartodb_id';
+                nbuckets = 52;
+            }
+            else if (aggregation==App.Cons.AGG_REGION){
+                sql = ' SELECT r.cartodb_id,r.name,count(ur.cartodb_id) as n,r.the_geom,r.the_geom_webmercator' +
+                        '    FROM ' + table + ' ur' +
+                        '    INNER JOIN alasarr.spain_regions_centroids r ON r.cod_region=ur.region' +
+                        '   WHERE ###filter###' +
+                        ' GROUP BY ur.region,r.cartodb_id' ;
+                nbuckets = 19;
+            }
+            else{
+                throw 'Invalid aggregation "' +  aggregation +'"';
+            }
 
-                var maxminSQL = 'SELECT MAX(q.n) as max,MIN(q.n) as min FROM (' + sql + ') as q ';
+            var maxminSQL = 'SELECT MAX(q.n) as max,MIN(q.n) as min FROM (' + sql.replace('###filter###',dateQueryALL) + ') as q ';
 
-                $.getJSON(App.getAPISQLURL() + '?q='+maxminSQL)
-                .done( function(data) {
+            $.getJSON(App.getAPISQLURL() + '?q='+maxminSQL)
+            .done( function(data) {
 
-                    var max = data.rows[0].max,
-                        min = data.rows[0].min;
+                var max = data.rows[0].max,
+                    min = data.rows[0].min;
 
-                    var cartocss = _this._getBubbleCSS({
-                        table: table,
-                        min : min,
-                        max : max
-                    });
-
-                    cartodb.createLayer(_this._map,{
+            
+                function createLayerClosure(i){
+                    cartodb.createLayer(_this._mapInstances[i],{
                         user_name : App.config.account,
                         type: 'cartodb',
                         sublayers : [{
-                            sql : sql,
+                            sql : sql.replace('###filter###',dateQuery[i]),
                             cartocss : cartocss,
                             interactivity: 'n,name'
                         }]
                     })
-                    .addTo(_this._map)
+                    .addTo(_this._mapInstances[i])
                     .on('done', function(layer) {
                          _this._currentLayers.push(layer);
                         layer.setInteraction(true);
 
                         var sublayer = layer.getSubLayer(0);
                         
-                        // sublayer.on('featureOver', function(e, latlng, pos, data) {
-                        //     _this._tooltipModel.set({
-                        //         'data' : [
-                        //             {
-                        //                 'label': aggregation==App.Cons.AGG_PROV ? 'Provincia' : 'Comunidad autónoma',
-                        //                 'value': data.name
-                        //             },
-                        //             {
-                        //                 'label': 'Casos',
-                        //                 'value': App.formatNumber(data.n,0)
-                        //             }
-                        //         ],
-                        //         'pos': pos
-                        //     });
-                        // });
+                        sublayer.on('featureOver', function(e, latlng, pos, data) {
+                            if (i==1){
+                                pos.x += $('#map2').position().left;
+                            }
+                            _this._tooltipModel.set({
+                                'data' : [
+                                    {
+                                        'label': aggregation==App.Cons.AGG_PROV ? 'Provincia' : 'Comunidad autónoma',
+                                        'value': data.name
+                                    },
+                                    {
+                                        'label': 'Casos',
+                                        'value': App.formatNumber(data.n,0)
+                                    }
+                                ],
+                                'pos': pos
+                            });
+                           
+                        });
 
-                        // sublayer.on('featureOut', function() {
-                        //     _this._tooltipModel.clear();
-                        // });
+                        sublayer.on('featureOut', function() {
+                           _this._tooltipModel.clear();
+                        });
                     })
                     .on('error', function(err) {
                         alert("some error occurred: " + err);
                     });
-                })
-                .fail(function(error){
-                    console.error(error);
-                });
-            }
+                }
+
+                for (var i=0;i<2;i++){
+
+                    var cartocss = _this._getBubbleCSS({
+                        table: table,
+                        min : min,
+                        max : max,
+                        nbuckets : nbuckets,
+                        color: i==0 ? null : '#cc9900'
+                    });
+
+                    createLayerClosure(i);
+                }
+            })
+            .fail(function(error){
+                console.error(error);
+            });
         }
     }
 });

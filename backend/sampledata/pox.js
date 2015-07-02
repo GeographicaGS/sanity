@@ -10,6 +10,8 @@ var json2csv = require('json2csv');
 
 var data = [];
 
+var year = 2014;
+
 function randomIntFromInterval(min,max)
 {
     return Math.floor(Math.random()*(max-min+1)+min);
@@ -22,9 +24,37 @@ var conString = "postgres://postgres:@192.168.59.103/datasets";
 var total_towns = 0;
 var total_towns_completed = 0;
 
-function createDataForCities(client,done,cod_prov,cod_mun,pop){
+//var totaltest = 0;
+
+function createDataForCities(client,done,cod_prov,cod_mun,factor){
     // 5% of population
-    var nPoints = Math.ceil(pop*0.003);
+
+    var nPoints;
+
+    if (year == 2014){
+        // area
+        //nPoints = Math.ceil(factor*0.0000002);
+        nPoints = Math.ceil(factor*0.002);
+        var andalucia = ['29','11','04','21','18','41','23','14'];
+        var barcelona = ['25','08','43'];
+        var galicia = ['32','36','27','15'];
+        var madrid = ['28']
+        if (andalucia.indexOf(cod_prov)!=-1 || barcelona.indexOf(cod_prov)!=-1
+             ||  galicia.indexOf(cod_prov)!=-1 || madrid.indexOf(cod_prov)!=-1){
+            nPoints = Math.ceil(nPoints / randomIntFromInterval(3,4));
+        }
+        
+
+    }
+    else{
+        // pop
+        nPoints = Math.ceil(factor*0.001);
+    }
+
+
+
+    // totaltest += nPoints;
+    // console.log(totaltest);
 
     var query = 'WITH points AS (' +
         '   SELECT RandomPointsInPolygon(' +
@@ -43,7 +73,7 @@ function createDataForCities(client,done,cod_prov,cod_mun,pop){
 
         for (var i=0;i<result.rows.length;i++){
             data.push({
-                date_disease : chance.date({year: 2014}),
+                date_disease : chance.date({year: year}),
                 name : chance.name(),
                 latitude : result.rows[i].lat,
                 longitude : result.rows[i].lng,
@@ -62,7 +92,6 @@ function createDataForCities(client,done,cod_prov,cod_mun,pop){
         }
         
     });
-
 }
 
 function generateCSV(){
@@ -73,12 +102,11 @@ function generateCSV(){
     json2csv({ data: data, fields: fields,del: ';' }, function(err, csv) {
         if (err) console.log(err);
         var fs = require('fs');
-        fs.writeFile("pox_2014.csv",csv, function(err) {
+        fs.writeFile('pox_' + year +'.csv',csv, function(err) {
             if(err) {
                 return console.log(err);
             }
-
-            console.log("The file pox_2014.csv was saved!");
+            console.log('The file pox_' + year + '.csv was saved!');
         }); 
     });
 
@@ -92,7 +120,7 @@ pg.connect(conString, function(err, client, done) {
         return console.error('error fetching client from pool', err);
     }
 
-    client.query('SELECT cod_prov,cod_mun,pop_total_2013 FROM spain_cities_population ORDER by name', function(err, result) {
+    client.query('SELECT cod_prov,cod_mun,pop_total_2013,st_area(st_transform(the_geom,23030)) as area FROM spain_cities_population ORDER by name', function(err, result) {
         //call `done()` to release the client back to the pool
         done();
 
@@ -102,6 +130,13 @@ pg.connect(conString, function(err, client, done) {
 
         total_towns = result.rows.length;
         for (var i=0;i<result.rows.length;i++){
+            var factor;
+            if (year==2014){
+                factor = result.rows[i].area;
+            }
+            else{
+                factor = result.rows[i].pop_total_2013
+            }
             createDataForCities(client,done,result.rows[i].cod_prov,result.rows[i].cod_mun,result.rows[i].pop_total_2013);
         }
     });
