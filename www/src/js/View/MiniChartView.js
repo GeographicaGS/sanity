@@ -26,17 +26,20 @@ App.View.MiniChart = Backbone.View.extend({
     
     render: function() {
   
-
+        var ctx = this._ctx.toJSON();
         var data = this._collection.toJSON();
         this.$el.html(Mustache.render(this._template, {
-          name:App.tr('Casos totales')
+            name : App.tr('Casos totales'),
+            cons: App.Cons
         }));
-        var ctx = this._ctx.toJSON();
+        
+        this.$('.data-numbers[data-type]').hide();
+        this.$('.data-numbers[data-type=\''+ ctx.type + '\']').show();
         if (ctx.type == App.Cons.TYPE_COMP){
-          this._drawChartComparison(this._collection.toJSON());  
+            this._drawChartComparison(this._collection.toJSON());  
         }
         else{
-          this._drawChartNominal(this._collection.toJSON());
+            this._drawChartNominal(this._collection.toJSON());
         }
         
         this._getSummaryData();
@@ -44,7 +47,6 @@ App.View.MiniChart = Backbone.View.extend({
     },
 
     _drawChartComparison: function(data){
-        console.log('todo');
         var margin = {top: 10, right: 16, bottom: 30, left: 25},
             width = 284,
             height = 74;
@@ -68,9 +70,13 @@ App.View.MiniChart = Backbone.View.extend({
                     return y(d.v2013); 
                   });
 
-        var line = d3.svg.line()
+        var line2013 = d3.svg.line()
             .x(function(d) { return x(d.d); })
             .y(function(d) { return y(d.v2013); });
+
+        var line2014 = d3.svg.line()
+            .x(function(d) { return x(d.d); })
+            .y(function(d) { return y(d.v2014); });
 
         var svg = d3.select("#charts_panel .data-graph").html('').append("svg")
                   .attr("width", width + margin.left + margin.right)
@@ -90,8 +96,9 @@ App.View.MiniChart = Backbone.View.extend({
         }));
 
         y.domain([0, d3.max(data, function(d) { 
-          return d.v2013; 
+          return d3.max([d.v2013,d.v2014]); 
         })]);
+
 
         svg.append("path")
             .datum(data)
@@ -101,8 +108,12 @@ App.View.MiniChart = Backbone.View.extend({
         svg.append("path")
               .datum(data)
               .attr("class", "line")
-              .attr("d", line);
+              .attr("d", line2013);
 
+        svg.append("path")
+              .datum(data)
+              .attr("class", "line line2014")
+              .attr("d", line2014);
 
         var guideline = svg.append('line')
           .attr('stroke', '#333')
@@ -115,10 +126,7 @@ App.View.MiniChart = Backbone.View.extend({
           .attr('transform', 'translate(' + width + ')');
 
         var numDecimal = 0;
-        if(this._ctx._type == App.Cons.TYPE_PETROLPUMP){
-          numDecimal = 2     
-        }
-
+        
         var circles = svg.selectAll("circle") 
                 .data(data) 
                 .enter() 
@@ -126,8 +134,8 @@ App.View.MiniChart = Backbone.View.extend({
                 .attr('class', 'circle')
                 .attr("r","0")
                 .attr("cx", function(d) { return x(d.d); }) 
-                .attr("cy", function(d) { return y(d.v); })
-                .attr("value",function(d) { return App.formatNumber(d.v,numDecimal); })
+                .attr("cy", function(d) { return y(d.v2013); })
+                .attr("value",function(d) { return App.formatNumber(d.v2013,numDecimal); })
                 .attr("date",function(d) { 
                   return d.d.getDate() + "/" + (d.d.getMonth() + 1) + "/" + d.d.getFullYear(); 
                 })
@@ -328,26 +336,46 @@ App.View.MiniChart = Backbone.View.extend({
                             
       if (this._ctx._type==App.Cons.TYPE_DISEASES){
 
-          var queryTotal = 'SELECT count(*) as total FROM diseases_pox' + ' WHERE ' + 
-                  'date_disease >=\'' + date.min.format('YYYY-MM-DD') + ' 00:00:00\' ::timestamp' +
-                            ' AND date_disease <=\'' + date.max.format('YYYY-MM-DD') + ' 23:59:59\' ::timestamp'
+        var queryTotal = 'SELECT count(*) as total FROM diseases_pox' + ' WHERE ' + 
+                'date_disease >=\'' + date.min.format('YYYY-MM-DD') + ' 00:00:00\' ::timestamp' +
+                          ' AND date_disease <=\'' + date.max.format('YYYY-MM-DD') + ' 23:59:59\' ::timestamp'
 
-          var queryDays = 'count(*) as last_days FROM diseases_pox' + ' WHERE ' + 
-                    'date_disease >= \'' + date.max.subtract('7','days').format('YYYY-MM-DD') + ' 00:00:00\' ::timestamp' +
-                    ' AND date_disease <=\'' + date.max.add('7','days').format('YYYY-MM-DD') + ' 23:59:59\' ::timestamp'
+        var queryDays = 'count(*) as last_days FROM diseases_pox' + ' WHERE ' + 
+                  'date_disease >= \'' + date.max.subtract('7','days').format('YYYY-MM-DD') + ' 00:00:00\' ::timestamp' +
+                  ' AND date_disease <=\'' + date.max.add('7','days').format('YYYY-MM-DD') + ' 23:59:59\' ::timestamp'
 
-          var query = 'SELECT (' + queryTotal + ') as total, ' + queryDays
+        var query = 'SELECT (' + queryTotal + ') as total, ' + queryDays
 
-          sql.execute(query)
-              .done(function(data) {
-                  var data = data.rows[0];
-                  _this.$('.tot-applications .data').text(App.formatNumber(data.total,0));   
-                  _this.$('.timeframe .data').text(App.formatNumber(data.last_days,0));
-              })
-              .error(function(errors) {
-                  options.error(errors)
-              });
+        sql.execute(query)
+            .done(function(data) {
+                var data = data.rows[0];
+                _this.$('.tot-applications .data').text(App.formatNumber(data.total,0));   
+                _this.$('.timeframe .data').text(App.formatNumber(data.last_days,0));
+            })
+            .error(function(errors) {
+                options.error(errors)
+            });
 
+      }
+
+      else if (this._ctx._type==App.Cons.TYPE_COMP){
+        var query = 'SELECT  ' +
+                      '(SELECT count(*) FROM diseases_pox'+
+                      ' WHERE date_disease >=\'2013-01-01 00:00:00\' AND date_disease <=\'2013-12-31 23:59:59\'' +
+                      ' ) as total_2013,'+
+                      '(SELECT count(*) FROM diseases_pox'+
+                      ' WHERE date_disease >=\'2014-01-01 00:00:00\' AND date_disease <=\'2014-12-31 23:59:59\'' +
+                      ' ) as total_2014';
+
+        sql.execute(query)
+            .done(function(data) {
+                var data = data.rows[0];
+                _this.$('.data[data-year=\'2013\']').text(App.formatNumber(data.total_2013,0));   
+                _this.$('.data[data-year=\'2014\']').text(App.formatNumber(data.total_2014,0));
+            })
+            .error(function(errors) {
+                options.error(errors)
+            });
       }
 
 
