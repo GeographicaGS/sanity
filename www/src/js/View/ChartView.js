@@ -13,8 +13,21 @@ App.View.Chart = Backbone.View.extend({
     onClose: function(){
         this.stopListening();
     },
-    
-    render: function() {
+    render:function(){
+        var ctx = this._ctx.toJSON();
+        if (ctx.type == App.Cons.TYPE_COMP){
+          this._renderComparison();
+        }
+        else{
+          this._renderNominal();
+        }
+
+    },
+    _renderComparison:function(){
+      console.log('TODO');
+
+    },
+    _renderNominal: function() {
         var data = this._collection.toJSON();
         var margin = {top: 20, right: 25, bottom: 40, left: 65},
             width = $("body").width() - $("header").width() - 105,
