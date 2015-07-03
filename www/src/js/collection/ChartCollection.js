@@ -35,7 +35,7 @@ App.Collection.Chart = Backbone.Collection.extend({
             }
             else if (this._ctx._type==App.Cons.TYPE_COMP){
 
-                query = 'SELECT * from diseasesPoxBySteps(\'2013-01-01 00:00:00\',\'2013-12-31 23:59:59\',' + App.Cons.STEPS + ')';
+                query = 'SELECT * from diseasesPoxByStepsNoCumulative(\'2013-01-01 00:00:00\',\'2013-12-31 23:59:59\',' + App.Cons.STEPS + ')';
 
                 var result = [];
             
@@ -50,7 +50,7 @@ App.Collection.Chart = Backbone.Collection.extend({
                             });
                         }
                         
-                        query = 'SELECT * from diseasesPoxBySteps(\'2014-01-01 00:00:00\',\'2014-12-31 23:59:59\',' + App.Cons.STEPS + ')';
+                        query = 'SELECT * from diseasesPoxByStepsNoCumulative(\'2014-01-01 00:00:00\',\'2014-12-31 23:59:59\',' + App.Cons.STEPS + ')';
                         
                         sql.execute(query)
                             .done(function(data) {

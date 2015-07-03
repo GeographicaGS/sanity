@@ -14,7 +14,7 @@ set region=(
   from alasarr.spain_regions r 
   inner join alasarr.spain_provinces p ON p.region=r.cod_region
   where p.cod_prov=prov )
-;
+where region is null
 
 CREATE INDEX ON diseases_pox(region);
 CREATE INDEX ON diseases_pox(prov);

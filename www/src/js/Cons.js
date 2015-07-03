@@ -8,7 +8,7 @@ App.Cons = {
     NOAGG : 'noagg',
     AGG_PROV : 'prov',
     AGG_REGION : 'region',
-    STEPS: 256,
+    STEPS: 12,
     MIN_DATE: '2013-01-01',
     MAX_DATE: '2014-12-31',
     INI_MIN_DATE: '2013-01-01',
