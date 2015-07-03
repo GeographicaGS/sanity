@@ -99,7 +99,7 @@ App.View.Map = Backbone.View.extend({
         this._getMapTileLayer().addTo(this._mapInstances[0]);
         this._getMapTileLayer().addTo(this._mapInstances[1]);
 
-        $('#map #map1').append('<h2 id=\'titlemap1\'>Varicela año 2014</h2>');
+        $('#map #map1').append('<h2 id=\'titlemap1\'>Varicela año 2013</h2>');
         $('#map #map2').append('<h2 id=\'titlemap2\'>Varicela año 2014</h2>');
 
         // complete process

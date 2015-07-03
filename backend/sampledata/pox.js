@@ -34,7 +34,7 @@ function createDataForCities(client,done,cod_prov,cod_mun,factor){
     if (year == 2014){
         // area
         //nPoints = Math.ceil(factor*0.0000002);
-        nPoints = Math.ceil(factor*0.002);
+        nPoints = Math.ceil(factor*0.001*0.65);
         var andalucia = ['29','11','04','21','18','41','23','14'];
         var barcelona = ['25','08','43'];
         var galicia = ['32','36','27','15'];
